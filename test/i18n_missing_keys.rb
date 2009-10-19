@@ -90,5 +90,22 @@ class MissingKeysFinderTest < Test::Unit::TestCase
       result = @finder.all_keys
       assert_equal ['greetings.hello', 'greetings.hi'], result
     end
+    
+    should 'work for Hans' do
+      translations = YAML.load(<<-EOF
+        en:
+          messages:
+            inclusion: "is not included in the list"
+            models:
+              user:
+                email:  "should look like an email addres"
+          label_messages:
+            validates_acceptance_of:  'Must be accepted'  
+        EOF
+      )
+      @backend.stubs(:translations).returns(translations)
+      result = @finder.all_keys
+      assert_equal ['label_messages.validates_acceptance_of', 'messages.inclusion', 'messages.models.user.email'], result
+    end 
   end
 end
