@@ -20,9 +20,6 @@ class MissingKeysFinder
     end.flatten.uniq
   end
 
-  def load_translations
-  end
-
   def find_missing_keys
     load_translations
     output_available_locales
