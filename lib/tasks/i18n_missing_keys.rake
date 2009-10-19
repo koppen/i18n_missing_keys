@@ -11,6 +11,7 @@ class MissingKeysFinder
 
   def initialize(backend)
     @backend = backend
+    self.load_translations
   end
 
   # Returns an array with all keys from all locales
@@ -21,7 +22,6 @@ class MissingKeysFinder
   end
 
   def find_missing_keys
-    load_translations
     output_available_locales
     output_unique_key_stats(all_keys)
 
