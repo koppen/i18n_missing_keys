@@ -107,4 +107,26 @@ class MissingKeysFinderTest < Test::Unit::TestCase
       assert_equal ['label_messages.validates_acceptance_of', 'messages.inclusion', 'messages.models.user.email'], result
     end 
   end
+
+  context 'key_exists?' do
+    setup do
+      @backend.stubs(:translations).returns({
+        :en => {:greetings => {:hi => 'Hi', :hello => 'Hello'}},
+        :da => {:greetings => {:hi => 'Hej'}}
+      })
+    end
+
+    should 'return true when key exists in locale' do
+      assert @finder.key_exists?('greetings', 'en')
+      assert @finder.key_exists?('greetings.hi', 'en')
+    end
+
+    should 'return false when key does not exist in locale' do
+      assert_equal false, @finder.key_exists?('omg', 'en')
+    end
+
+    should 'return false when key only exists in another locale' do
+      assert_equal false, @finder.key_exists?('hello', 'da')
+    end
+  end
 end
