@@ -8,6 +8,15 @@ require 'rake'
 require 'mocha'
 require 'activesupport'
 require 'shoulda'
+require 'fileutils'
+
+# Fake Rails class that enables us to load the i18n_missing_keys.yml
+# file.
+class Rails
+  def Rails.root
+    return FileUtils.pwd
+  end
+end
 
 # Do not re-load the environment task
 class Rake::Task
