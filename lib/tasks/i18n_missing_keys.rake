@@ -50,7 +50,7 @@ class MissingKeysFinder
   def output_missing_keys(missing_keys)
     puts "#{missing_keys.size} #{missing_keys.size == 1 ? 'key is missing' : 'keys are missing'} from one or more locales:"
     missing_keys.keys.sort.each do |key|
-      puts "'#{key}': Missing from #{missing_keys[key].join(', ')}"
+      puts "'#{key}': Missing from #{missing_keys[key].collect(&:inspect).join(', ')}"
     end
   end
 

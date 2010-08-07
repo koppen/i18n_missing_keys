@@ -45,13 +45,12 @@ class MissingKeysFinderTest < Test::Unit::TestCase
   def setup
     load 'lib/tasks/i18n_missing_keys.rake'
 
-    @backend = stub('I18n::Backend',
+    @backend = I18n.backend
+    @backend.stubs({
       :init_translations => true,
       :available_locales => ['en', 'da'],
       :translations => {:en => {:hi => 'Hi'}, :da => {:hi => 'Hej'}}
-    )
-    @backend.stubs(:translate).returns('Stubbed translation')
-    I18n.expects(:backend).returns(@backend).at_least(1)
+    })
     @finder = ::MissingKeysFinder.new(@backend)
     
     # Silence the finder
@@ -65,7 +64,7 @@ class MissingKeysFinderTest < Test::Unit::TestCase
       should 'return an empty hash' do
         result = @finder.find_missing_keys
         assert_instance_of Hash, result
-        assert result.empty?
+        assert result.empty?, result.inspect
       end
     end
 
@@ -88,7 +87,7 @@ class MissingKeysFinderTest < Test::Unit::TestCase
     should 'contain all the keys' do
       @backend.stubs(:translations).returns({:en => {:greetings => {:hi => 'Hi', :hello => 'Hello'}}, :da => {:greetings => {:hi => 'Hej'}}})
       result = @finder.all_keys
-      assert_equal ['greetings.hello', 'greetings.hi'], result
+      assert_equal ['greetings.hello', 'greetings.hi'], result.sort
     end
     
     should 'work for Hans' do
