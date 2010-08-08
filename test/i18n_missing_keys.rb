@@ -117,6 +117,23 @@ class MissingKeysFinderTest < Test::Unit::TestCase
     end 
   end
 
+  context "ignore translations listed in ignore_missing_keys.yml" do
+    setup do
+      @backend.stubs(:translations).returns(
+                                            {
+                                              :it => {:activerecord => {:foo => 'foo'}, :missing => { :one => 'uno'}},
+                                              :en => {:activerecord => {}, :missing => {}}
+                                            })
+    end
+
+    should "ignore english activerecord" do
+      result = @finder.find_missing_keys
+      assert result["missing.one"] = ["en", "da"]
+      assert result["activerecord.foo"] = ["da"]
+    end
+
+  end
+
   context 'key_exists?' do
     setup do
       @backend.stubs(:translations).returns({
