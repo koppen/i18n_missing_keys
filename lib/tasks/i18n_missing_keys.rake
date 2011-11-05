@@ -77,6 +77,8 @@ class MissingKeysFinder
   def collect_keys(scope, translations)
     full_keys = []
     translations.to_a.each do |key, translations|
+      next if translations.nil?
+
       new_scope = scope.dup << key
       if translations.is_a?(Hash)
         full_keys += collect_keys(new_scope, translations)
